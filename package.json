@@ -1,0 +1,15 @@
+{
+  "name": "async-node-lecture",
+  "version": "1.0.0",
+  "description": "async node lecture demo",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node main.js"
+  },
+  "author": "Ryan McDaniel",
+  "license": "ISC",
+  "dependencies": {
+    "markdown": "^0.5.0"
+  }
+}
