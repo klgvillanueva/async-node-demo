@@ -84,7 +84,7 @@ mockDB.connect(DB_URL, (err) => {
 console.log('TESTING CALLBACKS');
 
 // /*
-//   What's wrong with this?
+//   What's wrong with this approach?
 //     .
 //     .
 //     .
