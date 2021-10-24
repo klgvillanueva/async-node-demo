@@ -12,13 +12,15 @@
  *       - Still not performing concurrent asynchronous activity in parallel
  */
 
-// external dependencies:
+// external dependencies
 const markdown = require('markdown').markdown;
 const fs = require('fs');
+
+// mock database (just using a local file)
 const mockDB = require('../mocks/db');
 
 // constants
-const approachName = 'CALLBACKS REFACTORED';
+const approachName = 'CALLBACKS';
 const { BLOG_PATH, DB_URL } = require('../constants/constants');
 
 // EXAMPLE: CALLBACKS REFACTORED
@@ -51,7 +53,7 @@ function createArtCB(err, result) {
 function callbacksRefactored() {
   // Now that we've defined all of our callbacks, let's execute our code!
   mockDB.connect(DB_URL, dbConnectCB);
-  console.log('TESTING REFACTORED CALLBACKS');
+  console.log('CALLBACKS-REFACTORED LOG// mock database (local file)');
 }
 
 module.exports = callbacksRefactored;

@@ -15,7 +15,10 @@
 // external dependencies:
 const markdown = require('markdown').markdown;
 const fs = require('fs');
+
+// mock database (local file)
 const mockDB = require('../mocks/db');
+// custom error handler module imported locally
 const errorDispatch = require('../utils/error-handling');
 
 // constants
@@ -44,11 +47,11 @@ function getLocalArticle() {
 }
 
 // Almost identical to the createArticle, but passed different input.
-function paCreateArticle(results) {
+function paCreateArticle(html) {
   const newArticle = {
     mdFileName: 'my-first-feature-article',
     title: 'My first feature article!',
-    body: results[1],
+    body: html[1],
     tags: ['welcome', 'news'],
   };
   return new Promise((resolve, reject) => {
@@ -61,10 +64,8 @@ function paCreateArticle(results) {
 }
 
 function promiseAll() {
-  // Reusing same functions from Approach #3.
+  // Reusing the same functions & error handling from Approach #3
   const initialProms = [connectToDB(), getLocalArticle()];
-
-  // We will reuse the same error handling from Approach #3
 
   // Now that we've defined our functions, we may execute our code:
   Promise.all(initialProms)

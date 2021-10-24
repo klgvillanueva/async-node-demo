@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const {
   callbacks,
   callbacksRefactored,
@@ -8,20 +7,32 @@ const {
   asyncAwaitRefactored,
 } = require('./approaches/index');
 
-// EXAMPLE: CALLBACKS
-// callbacks(); // uncomment this line to test callbacks approach
+/* ==================
+## EXAMPLE: CALLBACKS
+==================== */
+callbacks(); // uncomment this line to test callbacks approach
 
-// EXAMPLE: CALLBACKS REFACTORED
+/* ============================
+## EXAMPLE: CALLBACKS REFACTORED 
+============================== */
 // callbacksRefactored(); // uncomment this line to test callbacskRefactored approach
 
-// EXAMPLE: PROMISES
+/* ================
+## EXAMPLE: PROMISES 
+================== */
 // promises(); // uncomment this line to test promises approach
 
-// EXAMPLE: PROMISE.ALL
+/* ===================
+## EXAMPLE: PROMISE.ALL 
+===================== */
 // promiseAll(); // uncomment this line to test promiseAll approach
 
-// EXAMPLE: ASYNC / AWAIT
+/* =====================
+## EXAMPLE: ASYNC / AWAIT 
+======================= */
 // asyncAwait(); // uncomment this line to test asyncAwait approach
 
-// EXAMPLE: ASYNC / AWAIT REFACTORED
+/* ================================
+## EXAMPLE: ASYNC / AWAIT REFACTORED 
+================================== */
 // asyncAwaitRefactored(); // uncomment this line to test asyncAwaitRefactored approach

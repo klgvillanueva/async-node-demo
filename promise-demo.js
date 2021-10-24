@@ -1,46 +1,54 @@
-/* eslint-disable no-console */
-/* eslint-disable no-return-await */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-plusplus */
-/* eslint-disable prefer-const */
-/* eslint-disable no-else-return */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable no-prototype-builtins */
-/* eslint-disable no-use-before-define */
-/* eslint-disable prefer-promise-reject-errors */
-/* eslint-disable consistent-return */
-/* eslint-disable no-shadow */
-/* eslint-disable comma-dangle */
-// /*
-//   Callbacks and Promises by Example
+/* =====================================================================================================================
+ * CALLBACKS AND PROMISES BY EXAMPLE *
 
-//   Background: Codesmith is changing the way they create blog articles and post
-//     articles to their site. In the past, markdown files were stored on a server
-//     and used to generate HTML. Now that Codesmith is generating more articles
-//     written by more people, we are transferring these files to a database. The
-//     database is live now, and we need a script to add all of these articles to
-//     the DB. In order to distill those parts of our task that are most relevant to
-//     handling asynchronous activity, we will present a simplified version of this
-//     problem:
+ ## BACKGROUND                                                                                                          
+ Codesmith is changing the way they create blog articles and post articles to their site. In the past, markdown files were stored on a server and used to generate HTML. Now that Codesmith is generating more articles written by more people, we are transferring these files to a database. The database is live now, and we need a script to add all of these articles to the DB. In order to distill those parts of our task that are most relevant to handling asynchronous activity, we will present a simplified version of this  problem.                                          
+.
+.
+.
+ ## TASKS                                                                                                               
+ + Step 1: Connect to the database                                                                                                
+ + Step 2: Fetch a markdown file from the file system                                                                   
+ + Step 3: Save fetched article to the database
+.
+.
+.       
+ >> How do the results of these three steps rely on one another?                                                        
+ + Step 3 depends on both Step 1 and Step 2 being completed  
+ + Step 2 is independent from Step 1! 
+   - DB access not needed in order to fetch articles from the file system
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+======================================================================================================================= */
 
-//   Tasks
-//   Step 1: Connect to DB
-//   Step 2: Fetch a markdown file from the file system
-//   Step 3: Save new article to the database
+/* ==========================
+* SETTING UP THE ENVIRONMENT *
+============================ */
 
-//   How do the results of these three steps rely on one another?
-//     - Step 2 is independent from Step 1. We do not need to be connected to the DB
-//       in order to properly fetch articles from the file system.
-//     - Step 3 depends on both Step 1 and Step 2 being completed.
-// */
+// - external dependencies
+const path = require('path'); // built-in module
+const fs = require('fs'); // built-in module
+const markdown = require('markdown').markdown; // npm module
 
-// /*----------------------------------------------------------------------------*/
-// // Setting up the environment.
-
-// external dependencies:
-const path = require('path');
-const markdown = require('markdown').markdown;
-const fs = require('fs');
+// mock database (just using a local file)
 const mockDB = require('./mocks/db');
 
 // fs constants:
@@ -52,8 +60,18 @@ const BLOG_PATH = path.join(
 // db constants:
 const DB_URL = 'my-mock-db';
 
-// /*----------------------------------------------------------------------------*/
-// //Approach #1: We execute a bunch of effectful functions:
+// * testing star
+// ?: testing question mark
+// - testing hyphen
+// + testing plus sign
+// >> testing double arrow
+// ## testing double sharp
+
+// / hi *----------------------------------------------------------------------------*/
+
+/* ======================================================
+* APPROACH #1: WE EXECUTE A BUNCH OF EFFECTFUL FUNCTIONS *
+======================================================== */
 
 // We must connect to the DB before saving a new article in the DB
 mockDB.connect(DB_URL, (err) => {
@@ -83,38 +101,41 @@ mockDB.connect(DB_URL, (err) => {
 
 console.log('TESTING CALLBACKS');
 
-// /*
-//   What's wrong with this approach?
-//     .
-//     .
-//     .
-//     .
-//     .
-//     .
-//     .
-//     .
-//     .
-//     .
-//     .
-//     .
-//     .
-//     .
-//     .
-//     .
-//     .
-//     .
-//     .
-//     .
-//     1. Hard to read and see what's going on!
-//       - the nesting is hard to follow!!! What if we had even more nesting?
-//       - one homogeneous-looking block of code
-//     2. We aren't grouping related code together.
-//       - Error handling happens separately in each callback!
-//     3. Independent/Concurrent asynchronous activity isn't performed simultaneously!
-// */
+/*
+?: What's wrong with this approach?
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  >> 1. Hard to read and see what's going on!
+    + the nesting is hard to follow!!! What if we had even more nesting?
+    + one homogeneous-looking block of code
+  
+  >> 2. We aren't grouping related code together.
+    + Error handling happens separately in each callback!
+  
+  >> 3. Independent/Concurrent asynchronous activity isn't performed simultaneously!
+*/
 
-// /*----------------------------------------------------------------------------*/
-// // Approach #2: define our callbacks before executing our code:
+/* ============================================================
+* Approach #2: define our callbacks before executing our code: *
+============================================================== */
 
 function dbConnectCB(err) {
   if (err) return console.log('db connection error: ', err.message);

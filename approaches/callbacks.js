@@ -10,9 +10,11 @@
  *    3. Concurrent asynchronous activity isn't performed in parallel!
  */
 
-// external dependencies:
+// external dependencies
 const markdown = require('markdown').markdown;
 const fs = require('fs');
+
+// mock database (just using a local file)
 const mockDB = require('../mocks/db');
 
 // constants
@@ -26,13 +28,14 @@ function callbacks() {
     // Callback 1: Now that we are connected, we can proceed!
     if (err) return console.log(`${approachName}: db error: `, err.message); // handle db connection error
     console.log(`${approachName}: Connected to DB`);
+
     // before we create a new article, we need to get the content of the article
     fs.readFile(BLOG_PATH, 'utf-8', (err, data) => {
       // Callback 2: Once we've fetched the md file, we can proceed!
       if (err) return console.log(`${approachName}: readfile error: `, err);
       console.log(`${approachName}: Got article from file system`);
-      // now that we are both connected to the db and have the article,
-      //  we are ready to create the article record in the db
+
+      // now that we're connected to the db AND have the article, we can create the article record in the db
       mockDB.create(
         {
           mdFileName: 'my-first-feature-article',

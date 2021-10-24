@@ -5,10 +5,13 @@
  * @see async-await approach for more details on advantages / disadvantages
  */
 
-// external dependencies:
+// external dependencies
 const markdown = require('markdown').markdown;
 const fs = require('fs');
+
+// mock database (local file)
 const mockDB = require('../mocks/db');
+// custom error handler module imported locally
 const errorDispatch = require('../utils/error-handling');
 
 // constants
@@ -56,17 +59,13 @@ function createArticle(html) {
 
 async function createBetterAsyncArticle() {
   try {
-    const results = await Promise.all([connectToDB(), getLocalArticle()]);
+    const results = await Promise.all([connectToDB(), getLocalArticle()]); // pauses local execution context
     const newArticle = await createArticle(results[1]); // pauses local execution context
+
     console.log(`${approachName}: success: `, newArticle._id);
   } catch (e) {
     errorDispatch(e, approachName);
   }
-}
-
-function asyncAwaitRefactored() {
-  createBetterAsyncArticle();
-  console.log('TESTING REFACTORED ASYNC/AWAIT');
 }
 
 module.exports = asyncAwaitRefactored;

@@ -15,10 +15,13 @@
  *         them internally, just wrapping them with this proimise functionality
  */
 
-// external dependencies:
+// external dependencies
 const markdown = require('markdown').markdown;
 const fs = require('fs');
+
+// mock database (local file)
 const mockDB = require('../mocks/db');
+// custom error handler module imported locally
 const errorDispatch = require('../utils/error-handling');
 
 // constants

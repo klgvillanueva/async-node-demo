@@ -14,10 +14,13 @@
  *    Promise.all)
  */
 
-// external dependencies:
+// external dependencies
 const markdown = require('markdown').markdown;
 const fs = require('fs');
+
+// mock database (local file)
 const mockDB = require('../mocks/db');
+// custom error handler module imported locally
 const errorDispatch = require('../utils/error-handling');
 
 // constants
@@ -65,11 +68,11 @@ function createArticle(html) {
 
 async function createAsyncArticle() {
   try {
-    // Reusing same functions (connectToDB, getLocalArticle,
-    //  createArticle) from Approach #3.
+    // Reusing approach #3 functions (connectToDB, getLocalArticle, createArticle)
     await connectToDB(); // pauses local execution context
     let html = await getLocalArticle(); // pauses local execution context
     const newArticle = await createArticle(html); // pauses local execution context
+
     console.log(`${approachName}: success: `, newArticle._id);
   } catch (e) {
     errorDispatch(e, approachName);
@@ -84,7 +87,6 @@ function asyncAwait() {
   console.log(`${approachName}: hi`);
   console.log('TESTING ASYNC/AWAIT');
 }
-
-asyncAwait();
+// asyncAwait();
 
 module.exports = asyncAwait;
