@@ -60,17 +60,8 @@ const BLOG_PATH = path.join(
 // db constants:
 const DB_URL = 'my-mock-db';
 
-// * testing star
-// ?: testing question mark
-// - testing hyphen
-// + testing plus sign
-// >> testing double arrow
-// ## testing double sharp
-
-// / hi *----------------------------------------------------------------------------*/
-
 /* ======================================================
-* APPROACH #1: WE EXECUTE A BUNCH OF EFFECTFUL FUNCTIONS *
+* APPROACH #1: CALLBACKS *
 ======================================================== */
 
 // We must connect to the DB before saving a new article in the DB
@@ -99,10 +90,10 @@ mockDB.connect(DB_URL, (err) => {
   });
 });
 
-console.log('TESTING CALLBACKS');
+// console.log('TESTING CALLBACKS');
 
 /*
-?: What's wrong with this approach?
+What's wrong with this approach?
   .
   .
   .
@@ -134,7 +125,7 @@ console.log('TESTING CALLBACKS');
 */
 
 /* ============================================================
-* Approach #2: define our callbacks before executing our code: *
+* Approach #1 REFACTORED: define our callbacks before executing our code: *
 ============================================================== */
 
 function dbConnectCB(err) {
@@ -165,7 +156,7 @@ function createArtCB(err, result) {
 // Now that we've defined all of our callbacks, let's execute our code!
 
 mockDB.connect(DB_URL, dbConnectCB);
-console.log('TESTING REFACTORED CALLBACKS');
+// console.log('TESTING REFACTORED CALLBACKS');
 
 /*
   1. What's better?
@@ -201,8 +192,9 @@ console.log('TESTING REFACTORED CALLBACKS');
       - Still not performing independent asynchronous activity independently
 */
 
-/*----------------------------------------------------------------------------*/
-// Approach #3: the callback design pattern is failing us. Let's implement promises.
+/* ============================================================
+* Approach #2 : PROMISES *
+============================================================== */
 
 function connectToDB() {
   return new Promise((resolve, reject) => {
@@ -265,59 +257,127 @@ connectToDB()
     console.log('created article', result);
   })
   .catch(errorDispatch);
+
+// console.log('TESTING PROMISES');
+
+// PROMISES WHITEBOARD
+
+connectToDB()
+  // return Promise Connect
+  .then(getLocalArticle)
+  // return Promise GetArticle
+  .then(createArticle)
+  // return Promise createArticle
+  .then((result) => {
+    console.log('created article', result);
+  })
+  // return Promise Log
+  .catch(errorDispatch);
+// return Promise Error
 console.log('TESTING PROMISES');
 
-// /*
+/*
+Promise Connect
+{
+  status: fullfilled
+  value: undefined
+  onFulfillment: [getLocalArticle],
+  onRejected: [],
+}
+*/
 
-//   1. Benefits?
-//   2. Drawbacks?
-//   .
-//   .
-//   .
-//   .
-//   .
-//   .
-//   .
-//   .
-//   .
-//   .
-//   .
-//   .
-//   .
-//   .
-//   .
-//   .
-//   .
-//   .
-//   .
-//   .
-//   Benefits:
-//   1. Everything is a function now. We are describing our actions with verbs!
-//   2. We can pass the results of previous asynch functions as parameters to
-//     subsequent asynch functions
-//   3. No excessive nesting
-//   4. When we execute our code, every action we perform is clear!
-//   5. We can group our error handling, or separate it if we prefer!
+/*
+Promise getArticle 
+{
+  status: reject,
+  value: { type: 'fs', err }
+  onFulfillment: [createArticle(HTML)],
+  onRejected: [],
+}
+*/
 
-//   Drawbacks:
-//   1. Clunky syntax, slightly more verbose
-//   2. Still not performing independent async activity simultaneously
-//   3. *Arguably not a drawback* Haven't entirely escaped callbacks: still using
-//       them internally
-// */
+/*
+Promise createArticle 
+{
+  status: fulfilled
+  value: result
+  onFulfillment: [anonFunc(result)],
+  onRejected: [],
+}
+*/
 
-// /*----------------------------------------------------------------------------*/
+/*
+Promise Log
+{
+  status: rejected
+  value: { type: 'fs', err }
+  onFulfillment: [],
+  onRejected: [errorDispatch({ type: 'fs', err })],
+}
+*/
 
-// /*
-//   We can actually do a bit better. Recall:
-//      Step 1: Connect to DB
-//      Step 2: Fetch markdown to convert it to HTML
-//   Don't rely on one another.
-//   Using only callbacks, writing logic to do both of these things simultaneously
-//   would have been difficult. Not so with promises!
-// */
+/*
+Promise Catch
+{
+  status: fullfilled
+  value: undefined
+  onFulfillment: [],
+  onRejected: [],
+}
+*/
 
-// // Approach #4: Use Promise.all
+/*
+
+  1. Benefits?
+  2. Drawbacks?
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  .
+  Benefits:
+  1. Everything is a function now. We are describing our actions with verbs!
+  2. We can pass the results of previous asynch functions as parameters to
+    subsequent asynch functions
+  3. No excessive nesting
+  4. When we execute our code, every action we perform is clear!
+  5. We can group our error handling, or separate it if we prefer!
+
+  Drawbacks:
+  1. Clunky syntax, slightly more verbose
+  2. Still not performing independent async activity simultaneously
+  3. *Arguably not a drawback* Haven't entirely escaped callbacks: still using
+      them internally
+*/
+
+/*----------------------------------------------------------------------------*/
+
+/*
+  We can actually do a bit better. Recall:
+     Step 1: Connect to DB
+     Step 2: Fetch markdown to convert it to HTML
+  Don't rely on one another.
+  Using only callbacks, writing logic to do both of these things simultaneously
+  would have been difficult. Not so with promises!
+*/
+/* ============================================================
+* Approach #2 : PROMISE.ALL *
+============================================================== */
 // Almost identical to the createArticle from above, but passed different input.
 function paCreateArticle(results) {
   const newArticle = {
@@ -335,8 +395,10 @@ function paCreateArticle(results) {
   });
 }
 
-// // Reusing same functions from Approach #3.
+// Reusing same functions from Approach #3.
 const initialProms = [connectToDB(), getLocalArticle()];
+
+// const results = [undefined, HTML]
 
 // We will reuse the same error handling from Approach #3
 
@@ -347,7 +409,18 @@ Promise.all(initialProms)
     console.log('created article', result);
   })
   .catch(errorDispatch);
-console.log('TESTING PROMISE.ALL');
+
+// console.log('TESTING PROMISE.ALL');
+
+/*
+Promise Proms
+{
+  status: pending,
+  value: [undefined, htmlArticle]
+  onFulfillment: [paCreateArticle(valueArray)],
+  onRejected: [],
+}
+*/
 
 /*
 
@@ -380,27 +453,28 @@ console.log('TESTING PROMISE.ALL');
       - If one promise fails, you're doomed
 */
 
-// Approach #5: async/await!
+/* ============================================================
+* Approach #4 : ASYNC / AWAIT *
+============================================================== */
 async function createAsyncArticle() {
   // Reusing same functions (connectToDB, getLocalArticle,
-  //  createArticle) from Approach #3.
+  //  createArticle) from Approach #2.
   await connectToDB(); // pauses local execution context
   let html = await getLocalArticle(); // pauses local execution context
-  for (let i = 0; i < 20; i++) {
-    console.log(i);
-  }
   return await createArticle(html); // pauses local execution context
 }
 
-createAsyncArticle()
-  .then((result) => console.log('success: ', result))
-  .catch(errorDispatch);
+// USE TRY CATCH
 
-// // when should we expect to see this console.log?
-// // always after createAsyncArticle has completed?
-// // OR anytime after createAsyncArticle is invoked?
-console.log('hi');
-console.log('TESTING ASYNC/AWAIT');
+// createAsyncArticle()
+//   .then((result) => console.log('success: ', result))
+//   .catch(errorDispatch);
+
+// when should we expect to see this console.log?
+// always after createAsyncArticle has completed?
+// OR anytime after createAsyncArticle is invoked?
+// console.log('hi');
+// console.log('TESTING ASYNC/AWAIT');
 
 /**
  * Could we still do better?
@@ -436,19 +510,22 @@ console.log('TESTING ASYNC/AWAIT');
  *
  */
 
+/* ============================================================
+* Approach #4 REFACTORED: ASYNC / AWAIT with PROMISE.ALL*
+============================================================== */
+
 async function createBetterAsyncArticle() {
   // Reusing same function (paCreateArticle) and array (initialProms) from Approach #4.
   const results = await Promise.all(initialProms);
-  for (let i = 0; i < 20; i++) {
-    console.log(i);
-  }
   return await paCreateArticle(results);
 }
 
-createBetterAsyncArticle()
-  .then((result) => console.log('success: ', result))
-  .catch(errorDispatch);
-console.log('TESTING REFACTORED ASYNC/AWAIT');
+TRY / CATCH;
+
+// createBetterAsyncArticle()
+//   .then((result) => console.log('success: ', result))
+//   .catch(errorDispatch);
+// console.log('TESTING REFACTORED ASYNC/AWAIT');
 
 /**
  *
