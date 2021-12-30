@@ -262,64 +262,63 @@ connectToDB()
 
 // PROMISES WHITEBOARD
 
-connectToDB()
-  // return Promise Connect
+/* connectToDB()
+  // return Promise toConnect
   .then(getLocalArticle)
-  // return Promise GetArticle
+  // return Promise toGetArticle
   .then(createArticle)
-  // return Promise createArticle
+  // return Promise toCreateArticle
   .then((result) => {
     console.log('created article', result);
   })
-  // return Promise Log
+  // return Promise toLog
   .catch(errorDispatch);
-// return Promise Error
-console.log('TESTING PROMISES');
+// return Promise onError */
 
 /*
-Promise Connect
+Promise toConnect
 {
-  status: fullfilled
+  status: pending
   value: undefined
-  onFulfillment: [getLocalArticle],
-  onRejected: [],
-}
-*/
-
-/*
-Promise getArticle 
-{
-  status: reject,
-  value: { type: 'fs', err }
-  onFulfillment: [createArticle(HTML)],
-  onRejected: [],
-}
-*/
-
-/*
-Promise createArticle 
-{
-  status: fulfilled
-  value: result
-  onFulfillment: [anonFunc(result)],
-  onRejected: [],
-}
-*/
-
-/*
-Promise Log
-{
-  status: rejected
-  value: { type: 'fs', err }
   onFulfillment: [],
-  onRejected: [errorDispatch({ type: 'fs', err })],
+  onRejected: [],
 }
 */
 
 /*
-Promise Catch
+Promise toGetArticle 
 {
-  status: fullfilled
+  status: pending
+  value: undefined
+  onFulfillment: [],
+  onRejected: [],
+}
+*/
+
+/*
+Promise toCreateArticle 
+{
+  status: pending
+  value: undefined
+  onFulfillment: [],
+  onRejected: [],
+}
+*/
+
+/*
+Promise toLog
+{
+  status: pending
+  value: undefined
+  onFulfillment: [],
+  onRejected: [],
+}
+*/
+
+/*
+Promise onError
+{
+  status: pending
   value: undefined
   onFulfillment: [],
   onRejected: [],
@@ -456,15 +455,18 @@ Promise Proms
 /* ============================================================
 * Approach #4 : ASYNC / AWAIT *
 ============================================================== */
+
 async function createAsyncArticle() {
   // Reusing same functions (connectToDB, getLocalArticle,
   //  createArticle) from Approach #2.
-  await connectToDB(); // pauses local execution context
-  let html = await getLocalArticle(); // pauses local execution context
-  return await createArticle(html); // pauses local execution context
+  try {
+    await connectToDB(); // pauses local execution context
+    let html = await getLocalArticle(); // pauses local execution context
+    return await createArticle(html); // pauses local execution context
+  } catch (err) {
+    return errorDispatch(err);
+  }
 }
-
-// USE TRY CATCH
 
 // createAsyncArticle()
 //   .then((result) => console.log('success: ', result))
@@ -516,11 +518,13 @@ async function createAsyncArticle() {
 
 async function createBetterAsyncArticle() {
   // Reusing same function (paCreateArticle) and array (initialProms) from Approach #4.
-  const results = await Promise.all(initialProms);
-  return await paCreateArticle(results);
+  try {
+    const results = await Promise.all(initialProms);
+    return await paCreateArticle(results);
+  } catch (err) {
+    return errorDispatch(err);
+  }
 }
-
-TRY / CATCH;
 
 // createBetterAsyncArticle()
 //   .then((result) => console.log('success: ', result))
