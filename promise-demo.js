@@ -262,7 +262,7 @@ connectToDB()
 
 // PROMISES WHITEBOARD
 
-/* connectToDB()
+connectToDB()
   // return Promise toConnect
   .then(getLocalArticle)
   // return Promise toGetArticle
@@ -273,14 +273,14 @@ connectToDB()
   })
   // return Promise toLog
   .catch(errorDispatch);
-// return Promise onError */
+// return Promise onError
 
 /*
 Promise toConnect
 {
-  status: pending
-  value: undefined
-  onFulfillment: [],
+  status: fulfilled
+  value: undefined (stays undefined)
+  onFulfillment: [getLocalArticle()],
   onRejected: [],
 }
 */
@@ -288,9 +288,9 @@ Promise toConnect
 /*
 Promise toGetArticle 
 {
-  status: pending
-  value: undefined
-  onFulfillment: [],
+  status: rejected
+  value: { type: 'fs', err }
+  onFulfillment: [createArticle],
   onRejected: [],
 }
 */
@@ -298,9 +298,9 @@ Promise toGetArticle
 /*
 Promise toCreateArticle 
 {
-  status: pending
-  value: undefined
-  onFulfillment: [],
+  status: rejected
+  value: { type: 'fs', err }
+  onFulfillment: [anonFunc(result)],
   onRejected: [],
 }
 */
@@ -308,18 +308,18 @@ Promise toCreateArticle
 /*
 Promise toLog
 {
-  status: pending
-  value: undefined
+  status: rejected
+  value: { type: 'fs', err }
   onFulfillment: [],
-  onRejected: [],
+  onRejected: [errorDispatch({ type: 'fs', err })],
 }
 */
 
 /*
 Promise onError
 {
-  status: pending
-  value: undefined
+  status: fulfilled
+  value: "This is an error"
   onFulfillment: [],
   onRejected: [],
 }
@@ -414,7 +414,7 @@ Promise.all(initialProms)
 /*
 Promise Proms
 {
-  status: pending,
+  status: fulfilled,
   value: [undefined, htmlArticle]
   onFulfillment: [paCreateArticle(valueArray)],
   onRejected: [],
