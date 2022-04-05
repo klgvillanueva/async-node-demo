@@ -279,8 +279,8 @@ connectToDB()
 Promise toConnect
 {
   status: fulfilled
-  value: undefined (stays undefined)
-  onFulfillment: [getLocalArticle()],
+  value: undefined
+  onFulfillment: [],
   onRejected: [],
 }
 */
@@ -288,9 +288,9 @@ Promise toConnect
 /*
 Promise toGetArticle 
 {
-  status: rejected
-  value: { type: 'fs', err }
-  onFulfillment: [createArticle],
+  status: fulfilled
+  value: undefined
+  onFulfillment: [],
   onRejected: [],
 }
 */
@@ -298,9 +298,9 @@ Promise toGetArticle
 /*
 Promise toCreateArticle 
 {
-  status: rejected
-  value: { type: 'fs', err }
-  onFulfillment: [anonFunc(result)],
+  status: fulfilled
+  value: undefined
+  onFulfillment: [],
   onRejected: [],
 }
 */
@@ -308,10 +308,10 @@ Promise toCreateArticle
 /*
 Promise toLog
 {
-  status: rejected
-  value: { type: 'fs', err }
+  status: fulfilled
+  value: undefined
   onFulfillment: [],
-  onRejected: [errorDispatch({ type: 'fs', err })],
+  onRejected: [],
 }
 */
 
@@ -319,7 +319,7 @@ Promise toLog
 Promise onError
 {
   status: fulfilled
-  value: "This is an error"
+  value: undefined
   onFulfillment: [],
   onRejected: [],
 }
